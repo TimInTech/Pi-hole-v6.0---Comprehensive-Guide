@@ -25,6 +25,7 @@ Pi-hole v6.0 introduces significant improvements over previous versions, enhanci
 
 🔗 **Recommended Raspberry Pi 4 Hardware & Software:** [Amazon Link](https://amzn.to/4gXEciT)
 
+📌 For more details and the latest updates, visit the official Pi-hole repository: GitHub
 ---
 
 ## 🛠 Installation Guide (Without Script)
@@ -120,4 +121,6 @@ sqlite3 /etc/pihole/gravity.db "INSERT OR IGNORE INTO domainlist (domain, enable
 - **Streaming Service Allowlisting**: If Netflix, Spotify, or YouTube are blocked, check their CDN domains (`cdn.netflix.com`, `spotify.com`, `youtube.com`) and whitelist them.
 
 🚀 **Customize Pi-hole to fit your network needs!**
+
+📌 For more details and the latest updates, visit the official Pi-hole repository: GitHub
 
