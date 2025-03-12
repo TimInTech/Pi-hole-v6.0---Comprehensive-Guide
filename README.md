@@ -5,6 +5,8 @@
 
 Pi-hole v6.0 introduces significant improvements over previous versions, enhancing performance, domain filtering, and API integration for better management.
 
+---
+
 ## 📌 Related Setup: Pi-hole + Unbound + PiAlert
 For an extended setup including **Unbound as a local DNS resolver** and **PiAlert for network monitoring**, check out:
 
@@ -19,14 +21,14 @@ This guide includes:
 ---
 
 ## 🚀 What's New in Pi-hole v6.0?
-- **Embedded Web Server & REST API** – lighttpd is no longer required, simplifying installation and administration.
+- **Embedded Web Server & REST API** – No need for lighttpd, simplifying installation.
 - **Advanced Filtering & Custom Domain Handling** – Greater control over allowed and blocked content.
 - **Optimized Memory Management in pihole-FTL** – Reduced RAM usage and faster query resolution.
 - **Real-time DNS Analysis** – Improved transparency and reporting.
 - **New API Backend** – Enables deeper automation and integrations.
-- **Enhanced User Management** – Improved role-based access control and permissions.
+- **Enhanced User Management** – Improved role-based access control.
 - **Better IPv6 Support** – Optimized handling of IPv6 DNS queries.
-- **Extended Logging Features** – More options for debugging and monitoring.
+- **Extended Logging Features** – More debugging and monitoring options.
 - **Support for Local DNS Entries** – Custom domain management for internal networks.
 - **Faster Query Responses via Optimized DNS Caching** – Reduced latency for frequently accessed domains.
 
@@ -43,7 +45,6 @@ curl -sSL https://install.pi-hole.net | bash
 
 ### Docker with Dual-Stack Support
 ```yaml
-# docker-compose.yml
 version: '3.7'
 services:
   pihole:
@@ -54,7 +55,7 @@ services:
         ipv6_address: fd00:dead:beef::100
     environment:
       TZ: 'America/New_York'
-      WEBPASSWORD: 'encrypted_sha256_hash_here'
+      WEBPASSWORD: 'yourpassword'
       DNSMASQ_LISTENING: 'all'
     volumes:
       - './etc-pihole:/etc/pihole'
@@ -76,46 +77,64 @@ networks:
 ---
 
 ## 📜 Blocklists: Overview and Evaluation
+
 ### ✅ Recommended Blocklists (Balanced, minimal false positives)
 - [StevenBlack Unified List](https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts)
 - [OISD Basic](https://dbl.oisd.nl/)
 - [1Hosts (Lite)](https://o0.pages.dev/)
 - [AdGuard DNS Filter](https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt)
 
-### 🛠️ Additional Blocklist Tips
-- **Regular Updates**: Schedule automatic updates:
-  ```bash
-  pihole -g
-  ```
-- **Custom Blocklists**: Add custom blocklists for specific needs.
-- **Whitelist Important Domains**: Avoid over-blocking by whitelisting essential domains.
+### 🛠️ Blocklist Tips
+```bash
+pihole -g  # Update blocklists
+pihole -a -b example.com  # Add blocklist manually
+```
 
 ---
 
-## 📜 Whitelist Management – Allowing Services
+## 📜 Whitelist Management
+
 ### 🖥️ Using the Web Interface
 - Open `http://<server-ip>/admin`
 - Navigate to **Whitelist**
 - Add the desired domain (e.g., `alexa.amazon.com`)
 - Save changes and update blocklists:
-  ```bash
-  pihole -g
-  ```
+```bash
+pihole -g
+```
 
 ### 📟 Using the Command Line
 ```bash
 pihole -w alexa.amazon.com login.microsoftonline.com googleapis.com
 ```
 
-### ⚙️ Advanced Whitelist Settings
-- **Regex-Based Allowing**: Define allowed domains using `regex.list`.
-- **Specific Subdomain Whitelisting**: `pihole -w sub.example.com`
-- **Streaming Service Allowlisting**: If Netflix, Spotify, or YouTube are blocked, check their CDN domains (`cdn.netflix.com`, `spotify.com`, `youtube.com`) and whitelist them.
+---
+
+## 🔥 Advanced IPv6 Configuration
+
+### 🌐 DHCPv6 Server Setup
+```ini
+# /etc/dnsmasq.d/06-ipv6.conf
+dhcp-range=::100,::200, constructor:eth0, 64, 12h
+dhcp-option=option6:dns-server,[fd00:dead:beef::100]
+dhcp-option=option6:domain-search,home.lan
+```
+
+### 📊 Dual-Stack Analytics
+```sql
+SELECT 
+  strftime('%Y-%m-%d', datetime(timestamp, 'unixepoch')) AS day,
+  COUNT(*) FILTER (WHERE type = 'A') AS ipv4,
+  COUNT(*) FILTER (WHERE type = 'AAAA') AS ipv6
+FROM queries
+GROUP BY day;
+```
 
 ---
 
 ## 🤖 REST API Mastery
-### 🔐 **JWT Authentication Flow**
+
+### 🔐 JWT Authentication Flow
 ```bash
 # Get access token
 curl -X POST https://pi.hole/admin/api/auth/login \
@@ -123,7 +142,7 @@ curl -X POST https://pi.hole/admin/api/auth/login \
   -d '{"password":"your_web_password"}'
 ```
 
-### 📈 **Automated Reporting Endpoints**
+### 📈 Automated Reporting Endpoints
 | Endpoint                 | Method | Description                          |
 |--------------------------|--------|--------------------------------------|
 | `/admin/api/summary`     | GET    | 60+ metrics in single JSON response |
@@ -132,21 +151,46 @@ curl -X POST https://pi.hole/admin/api/auth/login \
 
 ---
 
-## 📊 Performance Benchmarks (v5 vs v6)
+## 🛑 Next-Level Blocklist Strategies
 
-| Metric                  | v5.8.2 | v6.0 | Improvement |
-|-------------------------|--------|------|-------------|
-| Concurrent queries      | 15k    | 45k  | 3×          |
-| Memory usage (FTL)      | 82MB   | 58MB | 29% ↓       |
-| Blocklist reload        | 8.2s   | 2.1s | 75% ↓       |
-| API response time       | 220ms  | 38ms | 5.8×        |
+### 📌 v6-Enhanced Blocklist Syntax
+```text
+||ipv6-tracker.example^$dnstype=AAAA
+@@||azure.ipv6.microsoft.com^$dnstype=AAAA
+```
+
+### 🔄 Blocklist Version Control
+```bash
+pihole -g --rollback  # Rollback to previous blocklist state
+sudo crontab -e       # Set up automated tracking
+```
+```cron
+0 3 * * * /usr/local/bin/pihole -g && cd /etc/pihole && git commit -am "Daily blocklist update"
+```
 
 ---
 
-🔗 **Official Resources**  
-[GitHub Repository](https://github.com/pi-hole/pi-hole) | [v6 Migration Guide](https://docs.pi-hole.net/guides/v6-upgrade/)  
+## 🛠️ Troubleshooting v6.0
+
+### 🔍 Diagnostic Toolkit
+```bash
+pihole -c -6  # Check IPv6 query handling
+journalctl -u pihole-FTL -f | grep 'API_AUTH'  # Audit API access logs
+pihole -t -ex '^.*doubleclick.net$'  # Test regex filtering latency
+```
+
+### 🚩 Common IPv6 Pitfalls
+1. **RA (Router Advertisement) Conflicts**: Disable competing IPv6 routers:
+```bash
+sysctl -w net.ipv6.conf.all.accept_ra=0
+```
+2. **SLAAC vs DHCPv6**: Ensure consistent address assignment method.
+3. **DNS64/NAT64 Compatibility**: Add `dns64` to `PIHOLE_DNS_` environment variables.
+
+---
+
+🔗 **Official Resources**
+[GitHub Repository](https://github.com/pi-hole/pi-hole) | [v6 Migration Guide](https://docs.pi-hole.net/guides/v6-upgrade/)
 **Recommended Hardware**: [Raspberry Pi 4 Kit (8GB)](https://amzn.to/4gXEciT) with NVMe SSD via USB 3.0
 
-![Pi-hole v6 Architecture](https://example.com/path-to-v6-arch-diagram)  
-*New modular architecture of Pi-hole v6.0*
-
+![Pi-hole v6 Architecture](https://example.com/path-to-v6-arch-diagram)
