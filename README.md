@@ -1,9 +1,12 @@
 ![Pi-hole v6.0 Dashboard](https://github.com/user-attachments/assets/b0ad4d03-d118-4781-8dce-0a9956a978f2)  
-Hier ist die überarbeitete README.md mit detaillierten Anleitungen zur Installation von Pi-hole auf einem Raspberry Pi (Debian-basiert) sowie zusätzlichen Hinweisen zur Docker-Installation auf Debian/Ubuntu:
 
----
 
 # Pi-hole v6.0: Advanced DNS Sinkhole
+
+> **Looking for a comprehensive setup guide?**  
+> Check out **[TimInTech/Pi-hole-Unbound-PiAlert-Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup)** for a step-by-step guide to setting up Pi-hole with Unbound (for DNS over TLS) and PiAlert (for monitoring and alerts).
+
+---
 
 ## 🧠 **Intelligent Filtering Engine**
 
@@ -333,5 +336,3 @@ pihole -t -ex '^.*doubleclick.net$'
 ![Pi-hole v6 Architecture](https://example.com/path-to-v6-arch-diagram)  
 *New modular architecture of Pi-hole v6.0*
 ```
-
-Diese Version der README.md bietet klare Anleitungen für die Installation auf einem Raspberry Pi (Debian-basiert) sowie für die Docker-Installation auf Debian/Ubuntu. Sie ist strukturiert und enthält alle relevanten Details für eine erfolgreiche Einrichtung.
