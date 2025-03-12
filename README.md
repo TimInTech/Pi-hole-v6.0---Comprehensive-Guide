@@ -5,6 +5,19 @@
 
 Pi-hole v6.0 introduces significant improvements over previous versions, enhancing performance, domain filtering, and API integration for better management.
 
+## 📌 Related Setup: Pi-hole + Unbound + PiAlert
+For an extended setup including **Unbound as a local DNS resolver** and **PiAlert for network monitoring**, check out:
+
+➡ **[Pi-hole + Unbound + PiAlert Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup)**
+
+This guide includes:
+- **Step-by-step installation** of Pi-hole, Unbound, and PiAlert
+- **Optimized DNS settings** for better performance
+- **Network monitoring** with PiAlert for device detection
+- **Advanced configurations** for privacy and security
+
+---
+
 ## 🚀 What's New in Pi-hole v6.0?
 - **Embedded Web Server & REST API** – lighttpd is no longer required, simplifying installation and administration.
 - **Advanced Filtering & Custom Domain Handling** – Greater control over allowed and blocked content.
@@ -16,22 +29,6 @@ Pi-hole v6.0 introduces significant improvements over previous versions, enhanci
 - **Extended Logging Features** – More options for debugging and monitoring.
 - **Support for Local DNS Entries** – Custom domain management for internal networks.
 - **Faster Query Responses via Optimized DNS Caching** – Reduced latency for frequently accessed domains.
-
-## 🧠 **Intelligent Filtering Engine**
-```python
-# Example: Custom regex for social media blocking in v6
-pihole -regex '(^|\.)(tiktok|instagram|snapchat)\.(com|net)$'
-```
-- **Context-Aware Blocking**  
-  Granular control via regex 2.0 engine supporting negative lookaheads and domain hierarchy analysis.
-- **Dynamic Gravity Sync**  
-  Blocklists now update incrementally - 70% faster than v5's full-database rewrites.
-
-## ⚡ **Performance Breakthroughs**
-- **FTL DNS v3.0**  
-  Multi-threaded resolver with adaptive cache (up to 500,000 entries) reduces latency to <15ms for 95% of queries.
-- **Hardware-Accelerated Cryptography**  
-  ARM64 builds leverage Raspberry Pi 4's NEON extensions for 3x faster DNSSEC validation.
 
 ---
 
