@@ -1,5 +1,8 @@
 ![Pi-hole v6.0 Dashboard](https://github.com/user-attachments/assets/b0ad4d03-d118-4781-8dce-0a9956a978f2)  
 
+🔗 **Official Resources**  
+[GitHub Repository](https://github.com/pi-hole/pi-hole) | [v6 Migration Guide](https://docs.pi-hole.net/docker/upgrading/v5-v6/)  
+**Recommended Hardware**: [Raspberry Pi 4 Kit (8GB)](https://amzn.to/4gXEciT) with NVMe SSD via USB 3.0
 
 # Pi-hole v6.0: Advanced DNS Sinkhole
 
@@ -329,10 +332,5 @@ pihole -t -ex '^.*doubleclick.net$'
 
 ---
 
-🔗 **Official Resources**  
-[GitHub Repository](https://github.com/pi-hole/pi-hole) | [v6 Migration Guide](https://docs.pi-hole.net/guides/v6-upgrade/)  
-**Recommended Hardware**: [Raspberry Pi 4 Kit (8GB)](https://amzn.to/4gXEciT) with NVMe SSD via USB 3.0
 
-![Pi-hole v6 Architecture](https://example.com/path-to-v6-arch-diagram)  
-*New modular architecture of Pi-hole v6.0*
-```
+
