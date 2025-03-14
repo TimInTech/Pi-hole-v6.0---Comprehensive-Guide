@@ -321,16 +321,5 @@ pihole -t -ex '^.*doubleclick.net$'
 
 ---
 
-## 📊 **Performance Benchmarks (v5 vs v6)**
-
-| Metric                  | v5.8.2 | v6.0 | Improvement |
-|-------------------------|--------|------|-------------|
-| Concurrent queries      | 15k    | 45k  | 3×          |
-| Memory usage (FTL)      | 82MB   | 58MB | 29% ↓       |
-| Blocklist reload        | 8.2s   | 2.1s | 75% ↓       |
-| API response time       | 220ms  | 38ms | 5.8×        |
-
----
-
-
-
+## 📌 Troubleshooting & Common Issues
+For common Pi-hole v6 issues and solutions, check out the **[Troubleshooting Guide](TROUBLESHOOTING.md)**.
