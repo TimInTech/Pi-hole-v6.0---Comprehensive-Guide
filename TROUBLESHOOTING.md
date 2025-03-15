@@ -1,4 +1,3 @@
-```md
 # 🛠️ Pi-hole v6 - Troubleshooting Guide
 
 This guide provides solutions to common issues encountered when using Pi-hole v6, including DNS resolution problems, blocking issues, network conflicts, and performance optimizations.
