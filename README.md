@@ -9,6 +9,10 @@
 > **Looking for a comprehensive setup guide?**  
 > Check out **[TimInTech/Pi-hole-Unbound-PiAlert-Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup)** for a step-by-step guide to setting up Pi-hole with Unbound (for DNS over TLS) and PiAlert (for monitoring and alerts).
 
+> [Pi-hole v6.0: Advanced DNS Sinkhole for Raspberry Pi 3](https://github.com/TimInTech/-Pi-hole-v6.0-for-Raspberry-Pi-3-B/tree/main)
+
+> [Pi-hole_Troubleshooting_Guide](https://github.com/TimInTech/Pi-hole_Troubleshooting_Guide/tree/main)
+
 ---
 
 ## 🧠 **Intelligent Filtering Engine**
