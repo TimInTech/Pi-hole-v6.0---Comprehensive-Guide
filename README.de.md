@@ -49,12 +49,12 @@ curl -sSL https://install.pi-hole.net | bash
 **Nach der Installation (v6.1+ spezifisch):**
 
 - Admin-UI: `http://<IP>/admin/` (eingebauter Webserver; kein lighttpd nötig; prüfe Port 80/8080 bei 403-Fehlern).
-- Passwort ändern: `pihole -a -p`.
+- Passwort ändern: `sudo pihole -a -p`.
 - Test: `dig pi.hole @<PIHOLE-IP>`.
 - **Neu: v6 DB-Migration & toml prüfen**:
 
 ```bash
-pihole -r  # Reparatur, falls FTL fehlschlägt oder pihole.toml fehlt
+sudo pihole -r  # Reparatur, falls FTL fehlschlägt oder pihole.toml fehlt
 sudo systemctl status pihole-FTL  # Sicherstellen, dass CPU/DNS ok sind
 ```
 
@@ -64,9 +64,9 @@ sudo systemctl status pihole-FTL  # Sicherstellen, dass CPU/DNS ok sind
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-pihole -up  # Handhabt v6.1+ Upgrades; auf DNS-Ausfälle achten
-pihole -g
-pihole restartdns
+sudo pihole -up  # Handhabt v6.1+ Upgrades; auf DNS-Ausfälle achten
+sudo pihole -g
+sudo pihole restartdns
 ```
 
 **v6-Tipp**: Vor Updates Auto-Backups aktivieren, um DB/toml-Korruption zu vermeiden:
@@ -87,19 +87,19 @@ sudo systemctl restart pihole-FTL
 
 | Problem | Ursache (v6.1+ spezifisch) | Lösung |
 |---------|-----------------------------|--------|
-| **Listen laden nicht** | Upstream-DNS-Ausfall oder IPv6-Fehlkonfig | `pihole -g`; `/etc/resolv.conf` prüfen; IPv6 testen: `ping6 google.com`. |
+| **Listen laden nicht** | Upstream-DNS-Ausfall oder IPv6-Fehlkonfig | `sudo pihole -g`; `/etc/resolv.conf` prüfen; IPv6 testen: `ping6 google.com`. |
 | **Nur Router als Client sichtbar** | Router leitet sämtlichen DNS weiter | Pi-hole DHCP aktivieren; Router „DNS-Rebinding“ deaktivieren. Skript: `scripts/enable-dhcp.sh`. |
 | **YouTube-Werbung nicht blockbar** | Ads von Videodomains | Per DNS nicht zuverlässig möglich; uBlock Origin verwenden. |
 | **Seiten laden nicht (Overblocking)** | Z. B. neue CDNs | Im Query Log whitelisten; 2025-Whitelist aus `lists/` nutzen. |
 | **Port 53 Konflikt** | systemd-resolved oder Unbound | `sudo systemctl disable --now systemd-resolved`. |
-| **FTL-DB korrupt nach Update** | v6.1 Migrationsfehler | DB umbenennen: `sudo mv /etc/pihole/pihole-FTL.db /etc/pihole/pihole-FTL.db.bak`; `pihole restartdns`. Skript: `scripts/fix-ftl-db.sh`. |
+| **FTL-DB korrupt nach Update** | v6.1 Migrationsfehler | DB umbenennen: `sudo mv /etc/pihole/pihole-FTL.db /etc/pihole/pihole-FTL.db.bak`; `sudo pihole restartdns`. Skript: `scripts/fix-ftl-db.sh`. |
 | **Langsame GUI / hohe CPU (30–70%)** | Eingebauter Server überlastet (Pi Zero/3) | `MAXDBDAYS=14` in `pihole-FTL.conf`; Blocklisten reduzieren. Skript: `scripts/optimize-gui.sh`. |
-| **Mehrfach täglich Freezes** | Memory-Leak in FTL v6.0.x | Neuinstallation + Restore: `pihole uninstall; curl install; Teleporter restore`. |
+| **Mehrfach täglich Freezes** | Memory-Leak in FTL v6.0.x | Neuinstallation + Restore: `sudo pihole uninstall; curl install; Teleporter restore`. |
 | **Verbindungs-/UDP-/NTP-Fehler** | v6 Sync-Probleme | `timedatectl set-ntp true`; Upstream-DNS prüfen (z. B. 1.1.1.1). |
-| **Kein Internet nach v6-Upgrade** | DHCP/DNS-Schleife | Pi-hole-IP als einzigen DNS im Router setzen; `pihole flush`. |
-| **Web-UI (403 Forbidden)** | v6.1 eingebauter Webserver: Rechte/Port | `http://<IP>:8080/admin/` probieren; `pihole -r`; `/etc/pihole/pihole.toml` prüfen. Skript: `scripts/fix-ui-403.sh`. |
+| **Kein Internet nach v6-Upgrade** | DHCP/DNS-Schleife | Pi-hole-IP als einzigen DNS im Router setzen; `sudo pihole flush`. |
+| **Web-UI (403 Forbidden)** | v6.1 eingebauter Webserver: Rechte/Port | `http://<IP>:8080/admin/` probieren; `sudo pihole -r`; `/etc/pihole/pihole.toml` prüfen. Skript: `scripts/fix-ui-403.sh`. |
 | **DNS Server Failure** | Unbound/Upstream-Konflikte nach v6.1 | Upstream in UI prüfen; `dig @127.0.0.1 -p 5335 example.com`. Siehe [Pi-hole-Unbound-PiAlert-Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup). |
-| **pihole.toml fehlt nach Upgrade** | v6.1 Konfig-Migration fehlgeschlagen | `pihole -r --reconfigure`; aus Backup wiederherstellen. |
+| **pihole.toml fehlt nach Upgrade** | v6.1 Konfig-Migration fehlgeschlagen | `sudo pihole -r --reconfigure`; aus Backup wiederherstellen. |
 | **Docker v5→v6 Migration** | Env-Variablen (WEBPASSWORD) oder dnsmasq-Änderungen | Compose aktualisieren: `-e WEBPASSWORD`; Volumes neu abbilden; DHCP-Statics prüfen. Siehe `docs/docker-v6.md`. |
 
 **Debug ausführen**: `pihole -d` (Token teilen im Discourse).
@@ -122,10 +122,10 @@ Hinweis zu Rechten: Viele Pi-hole CLI-Befehle benötigen Root-Rechte. Beispiel: 
 | Geräte vom Blocken ausnehmen? | Gruppenverwaltung nutzen (v6 verbessert). | [#3372](https://discourse.pi-hole.net/t/how-can-i-use-pi-hole-for-all-my-devices-except-one-or-more/3372) |
 | Andere Software mit Pi-hole betreiben? | Ja, aber Ressourcen im Blick behalten. | [#8684](https://discourse.pi-hole.net/t/can-i-run-other-software-along-side-pi-hole/8684) |
 | Blocklisten hinzufügen? | GUI: Gruppenverwaltung → Adlists (2025: Firebog nutzen). | [#259](https://discourse.pi-hole.net/t/how-do-i-add-additional-block-lists-to-pi-hole/259); siehe `lists/2025-firebog.txt` |
-| Standard-Adlists wiederherstellen? | `pihole -g --reset`; oder manuell via Gravity. | [#32323](https://discourse.pi-hole.net/t/restoring-default-pi-hole-adlists/32323) |
+| Standard-Adlists wiederherstellen? | `sudo pihole -g --reset`; oder manuell via Gravity. | [#32323](https://discourse.pi-hole.net/t/restoring-default-pi-hole-adlists/32323) |
 | Remote-Zugriff (Port 53 öffnen)? | Nein – VPN nutzen (Tailscale/WireGuard). | [#13705](https://discourse.pi-hole.net/t/accessing-pi-hole-outside-of-my-lan/13705) |
 | **Neu: DoH/DoT-Umgehung in v6?** | Geräte nutzen verschlüsseltes DNS. | Domains wie `dns.google` blocken; Port 853 via iptables/nftables sperren. Siehe `docs/ipv6-doh.md`. |
-| **Neu: Hoher Speicherverbrauch in v6?** | Große FTL-DB. | `MAXDBDAYS=30` setzen; `pihole vacuum`. |
+| **Neu: Hoher Speicherverbrauch in v6?** | Große FTL-DB. | `MAXDBDAYS=30` setzen; `sudo pihole vacuum`. |
 | **Neu: DNS-Fehler nach v6.1-Upgrade?** | Upstream/Unbound-Fehlkonfig. | Upstream neu setzen; mit `dig` testen. Siehe [Pi-hole-Unbound-PiAlert-Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup). |
 | **Neu: Admin-Panel Login/Update-Probleme?** | v6.1 Berechtigungen oder NGINX-Konflikte. | `pihole -r`; eigenes NGINX deaktivieren. |
 
@@ -137,27 +137,29 @@ Vollständige Sticky-Liste: Siehe [r/pihole Wiki](https://www.reddit.com/r/pihol
 
 ```bash
 # Gravity-Refresh
-pihole -g
+sudo pihole -g
 
 # Live-Log
-pihole -t
+sudo pihole -t
 
 # Domain abfragen
-pihole -q example.com
+sudo pihole -q example.com
 
 # Neustart (v6: leichterer Reload)
-pihole restartdns
+sudo pihole restartdns
 
 # v6 DB/toml prüfen/reparieren
-sqlite3 /etc/pihole/pihole-FTL.db "PRAGMA integrity_check;"
-ls -la /etc/pihole/pihole.toml  # Existenz prüfen
+sudo sqlite3 /etc/pihole/pihole-FTL.db "PRAGMA integrity_check;"
+sudo ls -la /etc/pihole/pihole.toml  # Existenz prüfen
 
 # Cache leeren
-pihole flush
+sudo pihole flush
 
 # Upstream (Unbound) testen
 dig @127.0.0.1 -p 5335 example.com
 ```
+
+Hinweis (Docker): In Containern läuft Pi-hole standardmäßig als root; dort Befehle ohne sudo ausführen. Vom Host aus per `docker exec -it <pihole-container> pihole -g` u. a. Befehle ausführen.
 
 **Skript-Nutzung**:
 
@@ -172,7 +174,7 @@ dig @127.0.0.1 -p 5335 example.com
 ## 🔐 Sicherheit & Wartung (v6.1 Best Practices)
 
 - **Kein WAN-Expose**: Für Remote-Zugriff VPN nutzen.
-- **Auto-Updates**: `unattended-upgrades` + cron für `pihole -up`.
+- **Auto-Updates**: `unattended-upgrades` + cron für `sudo pihole -up`.
 - **Backups**: Täglich via Teleporter; Offsite speichern. `--backup`-Flags in Skripten nutzen.
 - **Neu in v6.1**: Audit-Log aktivieren: `AUDITLOG=true` in `pihole-FTL.conf`; pihole.toml-Rechte prüfen.
 - **Blocklisten 2025**: Mit Defaults starten + `lists/home-2025.txt` (vermeidet Overblocking).
