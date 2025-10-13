@@ -1,0 +1,50 @@
+services:
+  unbound:
+    image: mvance/unbound:latest
+    container_name: unbound
+    restart: unless-stopped
+    ports:
+      - "5335:5335/tcp"
+      - "5335:5335/udp"
+    healthcheck:
+      test: ["CMD-SHELL", "drill @127.0.0.1 -p 5335 example.com || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    network_mode: host
+    depends_on:
+      - unbound
+    environment:
+      TZ: Europe/Berlin
+      WEBPASSWORD: changeme
+      PIHOLE_DNS_: 127.0.0.1#5335
+      # DHCP aktivieren für 192.168.178.0/24
+      PIHOLE_DHCP: "true"
+      DHCP_START: 192.168.178.100
+      DHCP_END: 192.168.178.200
+      DHCP_ROUTER: 192.168.178.1
+  FTLCONF_LOCAL_IPV4: 192.168.178.21
+    volumes:
+      - ./pihole/etc-pihole:/etc/pihole
+      - ./pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN
+    # Hinweis: Stelle sicher, dass kein anderer DHCP-Server im Netz aktiv ist (z. B. FRITZ!Box DHCP deaktivieren),
+    # bevor du diesen Stack startest, um IP-Konflikte zu vermeiden.
+    healthcheck:
+      test: ["CMD-SHELL", "dig +short @127.0.0.1 pi.hole || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+networks:
+  default:
+    name: pihole-host-net
+    external: false

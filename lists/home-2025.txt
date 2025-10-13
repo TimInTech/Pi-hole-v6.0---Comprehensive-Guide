@@ -1,0 +1,2 @@
+# Home-friendly baseline lists (2025) – placeholder
+# Start with Pi-hole defaults. Add minimal extras below.

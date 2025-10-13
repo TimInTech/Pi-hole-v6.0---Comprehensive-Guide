@@ -1,0 +1,3 @@
+# Curated Firebog lists (2025) – placeholder
+# Add your preferred Firebog "ticked" lists here.
+# Keep it lean to avoid performance issues.

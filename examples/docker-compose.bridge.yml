@@ -1,0 +1,33 @@
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Berlin
+      WEBPASSWORD: changeme
+      # Lokale Host-IP: IP des Docker-Hosts im LAN 192.168.178.0/24
+      # Pi-hole IP laut Vorgabe: 192.168.178.21
+      FTLCONF_LOCAL_IPV4: 192.168.178.21
+  DNSMASQ_LISTENING: local
+      # Optional (Upstream DNS, z. B. Unbound/Cloudflare):
+      # PIHOLE_DNS_: 1.1.1.1;1.0.0.1
+    volumes:
+      - ./pihole/etc-pihole:/etc/pihole
+      - ./pihole/etc-dnsmasq.d:/etc/dnsmasq.d
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"   # Falls Port 80 auf dem Host belegt ist
+    healthcheck:
+      test: ["CMD-SHELL", "dig +short @127.0.0.1 pi.hole || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    cap_add:
+      - NET_ADMIN  # Optional, hilfreich für bestimmte Netzwerk-Optionen
+
+networks:
+  default:
+    name: pihole-net
