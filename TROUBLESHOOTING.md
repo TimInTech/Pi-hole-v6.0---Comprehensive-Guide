@@ -1,212 +1,39 @@
-# 🛠️ Pi-hole v6 - Troubleshooting Guide
+# 🛠️ Pi-hole v6 Troubleshooting Guide (2025)
 
-This guide provides solutions to common issues encountered when using Pi-hole v6, including DNS resolution problems, blocking issues, network conflicts, and performance optimizations.
-
----
-
-## 📌 1. DNS Resolution Issues
-
-### 🔹 Pi-hole is not blocking ads
-
-✅ **Solution:**
-
-1. Ensure that your device is using Pi-hole as the primary DNS:
-
-   ```bash
-   nslookup pi.hole
-   ```
-
-   If it fails, your router may be overriding DNS settings. Manually configure your device’s DNS.
-
-2. Restart Pi-hole:
-
-   ```bash
-   pihole restartdns
-   ```
-
-3. Check if the blocklists are up-to-date:
-
-   ```bash
-   pihole -g
-   ```
-
-### 🔹 Sites are slow to load / DNS queries take too long
-
-✅ **Solution:**
-
-1. Check query time:
-
-   ```bash
-   dig google.com @127.0.0.1 -p 5335
-   ```
-
-2. Ensure that Unbound or the upstream DNS is responsive.
-
-3. Optimize the cache size in unbound.conf:
-
-   ```
-   cache-max-ttl: 86400
-   cache-min-ttl: 3600
-   ```
-
-### 🔹 Pi-hole is not resolving local domains
-
-✅ **Solution:**
-
-1. Add local DNS records:
-
-   ```bash
-   sudo nano /etc/pihole/custom.list
-   ```
-
-   Example entry:
-
-   ```
-   192.168.1.100   myserver.local
-   ```
-
-2. Restart DNS:
-
-   ```bash
-   pihole restartdns
-   ```
+Stack: Pi-hole Core 6.1.4 / FTL 6.1 / Web 6.2 on Raspberry Pi 3/4 (Debian Bookworm/Trixie). Built-in web server only—no lighttpd.
 
 ---
 
-## 🔧 2. Whitelisting & Blocklist Issues
+## 1) Port 53 Conflicts (systemd-resolved/dnsmasq)
 
-### 🔹 A website is blocked even after whitelisting
+- Check listeners: `ss -tulpn | grep ':53' || netstat -tulpn | grep ':53'`.
+- Disable conflicting resolvers: `sudo systemctl disable --now systemd-resolved`; stop other DNS daemons or Docker containers binding 53.
+- Reapply Pi-hole DNS bindings: `sudo pihole restartdns`.
+- Validate with `scripts/v6-upgrade-check.sh` (includes port 53 checks) and ensure clients use only the Pi-hole IP.
 
-✅ **Solution:**
+## 2) FTL DB Corruption / Web UI 403 (built-in server)
 
-1. Check if the domain is still blocked:
+- Repair DB safely: `sudo bash scripts/fix-ftl-db.sh` (backs up `pihole-FTL.db`, recreates indexes).
+- Fix 403 or missing `pihole.toml`: `sudo bash scripts/fix-ui-403.sh` to refresh built-in web server permissions.
+- Restart services: `sudo pihole restartdns` and `sudo systemctl status pihole-FTL`.
+- Still broken? Run `sudo pihole -r --reconfigure` to rebuild the v6 config, then rerun the fix scripts if needed.
 
-   ```bash
-   pihole -q example.com
-   ```
+## 3) DNS Outages / Upstream Failures
 
-2. Force Pi-hole to update lists:
+- Unbound path: `dig @127.0.0.1 -p 5335 example.com`; if it fails, restart Unbound or update root hints.
+- Pi-hole path: `sudo pihole -g && sudo pihole restartdns`; confirm `pihole-FTL` is `active (running)`.
+- Run `sudo bash scripts/v6-upgrade-check.sh` to catch known v6.1 upgrade issues (pihole.toml missing, bad upstreams).
+- Docker users: verify host networking with `scripts/docker-verify.sh` if running Pi-hole in a container.
 
-   ```bash
-   pihole restartdns
-   ```
+## 4) DHCP & Client Visibility
 
-3. Manually whitelist:
+- Enable Pi-hole DHCP for per-client logs: `sudo bash scripts/enable-dhcp.sh`.
+- Disable router DNS helpers/rebind protection that overwrite client DNS.
+- Block DNS bypass: firewall outbound port 53/853 to anything except Pi-hole and your upstream/Unbound box.
+- After enabling DHCP, renew leases on clients or reboot access points.
 
-   ```bash
-   pihole -w example.com
-   ```
+## Quick References
 
-### 🔹 Blocklists are not updating
-
-✅ **Solution:**
-
-1. Manually update:
-
-   ```bash
-   pihole -g
-   ```
-
-2. Check for errors:
-
-   ```bash
-   cat /var/log/pihole_updateGravity.log
-   ```
-
----
-
-## 🌍 3. IPv6 & Network Issues
-
-### 🔹 IPv6 Queries are not being blocked
-
-✅ **Solution:**
-
-1. Ensure Pi-hole is handling IPv6:
-
-   ```bash
-   dig AAAA example.com @127.0.0.1 -p 5335
-   ```
-
-2. If required, force all clients to use IPv4:
-
-   ```bash
-   pihole -a setdns 192.168.1.2
-   ```
-
-### 🔹 Some devices bypass Pi-hole
-
-✅ **Solution:**
-
-1. Ensure that your router only assigns Pi-hole’s IP as DNS.
-
-2. Block external DNS on the router firewall:
-
-   ```bash
-   sudo iptables -A OUTPUT -p udp --dport 53 -j REJECT
-   ```
-
-3. If the device uses DoH/DoT (DNS over HTTPS/TLS), block common DoH servers.
-
----
-
-## 4. Performance & Optimization
-
-### 🔹 Pi-hole uses too much memory
-
-✅ **Solution:**
-
-1. Reduce the number of blocklists:
-
-   ```bash
-   pihole -a -b remove_list_url
-   ```
-
-2. Reduce FTL cache size in /etc/pihole/pihole-FTL.conf:
-
-   ```
-   MAXDBDAYS=7
-   DBINTERVAL=60.0
-   ```
-
-### 🔹 Reduce Unbound CPU usage
-
-✅ **Solution:**
-
-1. Optimize the Unbound configuration:
-
-   ```
-   num-threads: 1
-   msg-cache-size: 4m
-   rrset-cache-size: 8m
-   ```
-
----
-
-## 🛑 5. Debugging & Logs
-
-### 🔹 How to check live logs
-
-```bash
-pihole -t
-```
-
-### 🔹 Check DNS query logs
-
-```bash
-cat /var/log/pihole.log | grep example.com
-```
-
-### 🔹 Enable FTL debugging for deeper analysis
-
-```bash
-pihole checkout ftl debug
-```
-
----
-
-## 📝 6. Reporting Issues
-
-If the issue persists, generate a debug log and submit it:
-
-```bash
-pihole -d
+- Logs: `sudo journalctl -u pihole-FTL -f`
+- Health: `sudo pihole status` and `dig pi.hole @<PIHOLE-IP>`
+- Backups: use `scripts/backup-restore.sh` before major upgrades.

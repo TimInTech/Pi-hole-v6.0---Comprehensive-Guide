@@ -14,6 +14,8 @@
 
 ## 🧠 About
 
+> Stack: Pi-hole Core 6.1.4 / FTL 6.1 / Web 6.2 (built-in web server; no lighttpd). Tested on Raspberry Pi 3/4 (64-bit) for Debian Bookworm/Trixie and Raspberry Pi OS.
+
 This repository is a **completely new, centralized hub** for resolving common Pi-hole v6.x issues, built from the ground up to address repetitive problems seen in r/pihole and official Discourse threads. It expands on the original [Pi-hole v6.0 Guide](https://github.com/TimInTech/Pi-hole-v6.0---Comprehensive-Guide) by incorporating:
 
 - **Updated for v6.1.4+** (latest core release: July 14, 2025; FTL v6.1: March 30, 2025; Web v6.2: May 30, 2025): Includes built-in web server fixes, FTL database migrations, and post-v6.1 bugfixes for DNS resolution and UI stability.
@@ -39,6 +41,8 @@ Search r/pihole first for duplicates—many answers link back here or to [Pi-hol
 ---
 
 ## ⚙️ Quick Start
+
+> Prefer automation? Use `Pi-hole-Unbound-PiAlert-Setup` for a one-click install. For ongoing updates/backups, see `pihole-maintenance-pro`.
 
 ### 🔧 Install Pi-hole v6.x
 

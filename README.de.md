@@ -14,6 +14,8 @@ Umfassender Pi-hole v6.x Setup-, Fix- und FAQ-Leitfaden (Debian Bookworm/Trixie/
 
 ## 🧠 Über dieses Projekt
 
+> Stack: Pi-hole Core 6.1.4 / FTL 6.1 / Web 6.2 (eingebauter Webserver, kein lighttpd). Getestet auf Raspberry Pi 3/4 (64-bit) mit Debian Bookworm/Trixie bzw. Raspberry Pi OS.
+
 Dieses Repository ist ein **zentraler Hub** zur Lösung häufiger Pi-hole v6.x-Probleme. Es baut auf dem ursprünglichen [Pi-hole v6.0 Guide](https://github.com/TimInTech/Pi-hole-v6.0---Comprehensive-Guide) auf und adressiert wiederkehrende Themen aus r/pihole und dem offiziellen Discourse:
 
 - **Aktualisiert für v6.1.4+** (neueste Core-Release: 14. Juli 2025; FTL v6.1: 30. März 2025; Web v6.2: 30. Mai 2025): Beinhaltet Fixes für den eingebauten Webserver, FTL-Datenbankmigrationen sowie Bugfixes rund um DNS-Auflösung und UI-Stabilität.
@@ -39,6 +41,8 @@ Bitte zuerst r/pihole durchsuchen—viele Antworten verweisen hierher oder auf d
 ---
 
 ## ⚙️ Schnellstart
+
+> Bevorzugst du Automatisierung? Nutze `Pi-hole-Unbound-PiAlert-Setup` für die Ein-Klick-Installation. Für laufende Updates/Backups siehe `pihole-maintenance-pro`.
 
 ### 🔧 Pi-hole v6.x installieren
 
