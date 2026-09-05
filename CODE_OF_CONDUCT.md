@@ -7,6 +7,7 @@ We as contributors and maintainers pledge to make participation in our project a
 ## 🚫 Unacceptable Behavior
 
 Examples include:
+
 - Use of sexualized language or imagery
 - Trolling, insulting or derogatory comments
 - Public or private harassment
