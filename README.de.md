@@ -1,6 +1,6 @@
 # 🛠️ Pi-hole Resolver v6 — Ultimativer Troubleshooting-Hub
 
-**Umfassender Pi-hole v6.x Setup-, Fix- und FAQ-Leitfaden (Linux/Docker)**
+### Umfassender Pi-hole v6.x Setup-, Fix- und FAQ-Leitfaden (Linux/Docker)
 
 [![Build](https://img.shields.io/github/actions/workflow/status/TimInTech/pi-hole-resolver-v6/ci-sanity.yml?branch=main)](https://github.com/TimInTech/pi-hole-resolver-v6/actions)
 [![License](https://img.shields.io/github/license/TimInTech/pi-hole-resolver-v6)](LICENSE)
@@ -15,10 +15,11 @@
 > **Aktueller Stack:** Pi-hole Core v6.1.4 / FTL v6.7 / Web v6.6 / Docker 2026.07.x.
 
 Dieses Repository ist ein zentraler Hub zur Lösung häufiger Pi-hole v6.x-Probleme. Es beinhaltet:
+
 - **Aktualisiert für 2026:** Volle Unterstützung für FTL v6.7, Web v6.6 und Docker 2026.07.x.
 - **Docker-Fokus:** Ausführlicher Leitfaden zu den neuen `FTLCONF_*` Umgebungsvariablen.
 - **Neue Skripte:** Helfer für DB-Reparatur, GUI-Optimierung, Backups und v6-Upgrades.
-- **Companion-Repos:** 
+- **Companion-Repos:**
   - [Pi-hole-Unbound-PiAlert-Setup](https://github.com/TimInTech/Pi-hole-Unbound-PiAlert-Setup)
   - [pihole-maintenance-pro](https://github.com/TimInTech/pihole-maintenance-pro)
 
@@ -35,6 +36,7 @@ curl -sSL https://install.pi-hole.net | bash
 ```
 
 **Prüfung nach der Installation:**
+
 - Admin-UI: `http://<IP>/admin/` (Pi-hole v6 nutzt einen eingebauten Webserver; kein lighttpd nötig).
 - Passwort ändern: `sudo pihole -a -p`
 - Status-Check: `sudo systemctl status pihole-FTL`
