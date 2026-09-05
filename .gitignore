@@ -6,3 +6,4 @@ node_modules/
 vendor/bundle/
 .bundle/
 .npm-cache/
+etc-pihole/
