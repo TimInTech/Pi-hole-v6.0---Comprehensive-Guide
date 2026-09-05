@@ -5,6 +5,7 @@ Pi-hole v6 introduces significant changes, notably the removal of `lighttpd` in 
 ## Docker Migration
 
 If you are upgrading an existing Docker deployment:
+
 1. **Environment Variables:** `WEBPASSWORD` and other legacy vars are deprecated. Use `FTLCONF_*` prefixes.
    - Example: `WEBPASSWORD=secret` becomes `FTLCONF_webserver_api_password=secret`.
 2. **Volumes:** `/etc/dnsmasq.d` is no longer strictly required for standard configs, as Pi-hole FTL handles everything internally.

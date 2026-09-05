@@ -1,6 +1,6 @@
 # 🛠️ Pi-hole Resolver v6 — Ultimativer Troubleshooting-Hub
 
-### Umfassender Pi-hole v6.x Setup-, Fix- und FAQ-Leitfaden (Linux/Docker)
+## Umfassender Pi-hole v6.x Setup-, Fix- und FAQ-Leitfaden (Linux/Docker)
 
 [![Build](https://img.shields.io/github/actions/workflow/status/TimInTech/pi-hole-resolver-v6/ci-sanity.yml?branch=main)](https://github.com/TimInTech/pi-hole-resolver-v6/actions)
 [![License](https://img.shields.io/github/license/TimInTech/pi-hole-resolver-v6)](LICENSE)

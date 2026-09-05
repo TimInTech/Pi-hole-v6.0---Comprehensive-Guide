@@ -43,20 +43,25 @@ Hinweise:
 
 ## Migration v5 -> v6 Schritt für Schritt
 
-1) Backup anlegen (Teleporter oder Volume-Sicherung):
- - Web-UI: Settings → Teleporter (recommended)
- - Oder Volumes `/etc/pihole` und `/etc/dnsmasq.d` sichern.
-2) Container stoppen und entfernen: `docker compose down`
-3) Compose-Datei auf v6 aktualisieren (siehe Beispiele):
- - `image: pihole/pihole:latest`
- - `WEBPASSWORD` setzen
- - Ports/Volumes prüfen
-4) Container neu starten: `docker compose up -d`
-5) Prüfen:
- - `docker logs pihole -f` für Fehler
- - Admin UI: `http://<host-ip>/admin/` (oder `:8080`)
- - `dig @<host-ip> pi.hole`
-6) Optional: Unbound-Container hinzufügen und in Pi-hole als Upstream `127.0.0.1#5335` konfigurieren.
+1. Backup anlegen (Teleporter oder Volume-Sicherung):
+   - Web-UI: Settings → Teleporter (recommended)
+   - Oder Volumes `/etc/pihole` und `/etc/dnsmasq.d` sichern.
+
+2. Container stoppen und entfernen: `docker compose down`
+
+3. Compose-Datei auf v6 aktualisieren (siehe Beispiele):
+   - `image: pihole/pihole:latest`
+   - `WEBPASSWORD` setzen
+   - Ports/Volumes prüfen
+
+4. Container neu starten: `docker compose up -d`
+
+5. Prüfen:
+   - `docker logs pihole -f` für Fehler
+   - Admin UI: `http://<host-ip>/admin/` (oder `:8080`)
+   - `dig @<host-ip> pi.hole`
+
+6. Optional: Unbound-Container hinzufügen und in Pi-hole als Upstream `127.0.0.1#5335` konfigurieren.
 
 ## Nützliche Tipps
 
